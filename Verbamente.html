@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VerbaMente – Práctica de Verbos</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --paper: #fdfaf3;
+    --ink: #1a1512;
+    --muted: #7a6f63;
+    --accent: #c94f2a;
+    --accent2: #2a6fc9;
+    --accent3: #2a9c5e;
+    --gold: #c9a02a;
+    --border: #d4c9b8;
+    --shadow: rgba(26,21,18,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(201,79,42,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(42,111,201,0.06) 0%, transparent 60%);
+    font-family: 'Instrument Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* Header */
+  header {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--accent); }
+  .score-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 16px;
+    display: flex;
+    gap: 16px;
+  }
+  .score-item { display: flex; flex-direction: column; align-items: center; }
+  .score-num { font-size: 1.1rem; font-weight: 500; color: var(--gold); }
+  .score-label { font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Mode selector */
+  .mode-bar {
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .mode-btn {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 14px 20px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .mode-btn:hover { color: var(--ink); }
+  .mode-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .mode-icon { font-size: 1rem; }
+
+  /* Filter bar */
+  .filter-bar {
+    padding: 12px 32px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .filter-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; }
+  .filter-chip {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+  .filter-chip.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .filter-chip:hover:not(.active) { border-color: var(--ink); color: var(--ink); }
+
+  /* Main area */
+  main {
+    max-width: 760px;
+    margin: 40px auto;
+    padding: 0 24px 80px;
+  }
+
+  /* Card base */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 var(--border);
+    overflow: hidden;
+  }
+
+  /* ===== FLASHCARD MODE ===== */
+  .flashcard-wrap { perspective: 1000px; }
+  .flashcard {
+    width: 100%;
+    min-height: 280px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .fc-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    border-radius: 4px;
+  }
+  .fc-front { background: var(--paper); }
+  .fc-back { background: var(--ink); color: var(--bg); transform: rotateY(180deg); }
+  .fc-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.45;
+    margin-bottom: 16px;
+  }
+  .fc-verb {
+    font-family: 'Fraunces', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+  }
+  .fc-context {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    margin-top: 10px;
+    font-style: italic;
+  }
+  .fc-hint { font-size: 0.8rem; opacity: 0.4; margin-top: 24px; }
+  .fc-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  .fc-table td {
+    padding: 6px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .fc-table td:first-child { opacity: 0.55; font-size: 0.78rem; }
+  .fc-table tr:last-child td { border-bottom: none; }
+  .fc-tense-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    background: var(--accent);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+
+  /* Flashcard controls */
+  .fc-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+  .btn {
+    font-family: 'Instrument Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 10px 22px;
+    border-radius: 3px;
+    border: 2px solid;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-outline { background: transparent; border-color: var(--border); color: var(--ink); }
+  .btn-outline:hover { border-color: var(--ink); }
+  .btn-good { background: var(--accent3); border-color: var(--accent3); color: white; }
+  .btn-bad { background: var(--accent); border-color: var(--accent); color: white; }
+  .btn-good:hover { opacity: 0.85; }
+  .btn-bad:hover { opacity: 0.85; }
+
+  /* Progress bar */
+  .progress-wrap { margin-bottom: 20px; }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* ===== COMPLETAR FRASES ===== */
+  .exercise-header {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .exercise-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+  }
+  .tense-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    background: var(--accent);
+    padding: 3px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .exercise-body { padding: 32px; }
+  .sentence-display {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .blank-input {
+    border: none;
+    border-bottom: 2.5px solid var(--accent);
+    background: transparent;
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    width: 160px;
+    outline: none;
+    text-align: center;
+    padding: 0 4px;
+    transition: border-color 0.2s;
+  }
+  .blank-input:focus { border-color: var(--ink); color: var(--ink); }
+  .blank-input.correct { border-color: var(--accent3); color: var(--accent3); }
+  .blank-input.wrong { border-color: var(--accent); animation: shake 0.3s; }
+  .hint-text {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .hint-text strong { color: var(--ink); font-style: normal; }
+  .feedback-box {
+    padding: 14px 18px;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    margin-top: 16px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+  .feedback-box.correct { background: #e8f5ee; border: 1px solid #b8ddc9; color: #1a5e3a; display: flex; }
+  .feedback-box.wrong { background: #fdf0ed; border: 1px solid #f0c4b8; color: #7a2a18; display: flex; }
+  .feedback-icon { font-size: 1.2rem; }
+
+  /* ===== OPCIÓN MÚLTIPLE ===== */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .option-btn {
+    background: var(--paper);
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    padding: 14px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--accent2); background: #f0f5fd; }
+  .option-btn.correct { border-color: var(--accent3); background: #e8f5ee; color: #1a5e3a; }
+  .option-btn.wrong { border-color: var(--accent); background: #fdf0ed; color: #7a2a18; }
+  .option-letter {
+    width: 24px; height: 24px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  /* ===== ESCRITURA LIBRE ===== */
+  .conjugation-table-wrap { overflow-x: auto; }
+  .conj-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'DM Mono', monospace;
+  }
+  .conj-table th {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 10px 16px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    text-align: left;
+  }
+  .conj-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .conj-table tr:last-child td { border-bottom: none; }
+  .conj-table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+  .pronoun-cell { color: var(--muted); font-size: 0.8rem; }
+  .conj-input {
+    border: none;
+    border-bottom: 2px solid var(--border);
+    background: transparent;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    width: 100%;
+    outline: none;
+    padding: 2px 4px;
+    color: var(--ink);
+    transition: border-color 0.2s;
+  }
+  .conj-input:focus { border-color: var(--accent2); }
+  .conj-input.correct { border-color: var(--accent3); color: var(--accent3); font-weight: 500; }
+  .conj-input.wrong { border-color: var(--accent); color: var(--accent); }
+  .correct-ans { color: var(--accent3); font-weight: 500; }
+
+  /* Result summary */
+  .result-summary {
+    display: none;
+    text-align: center;
+    padding: 40px 32px;
+    animation: fadeIn 0.4s ease;
+  }
+  .result-summary.show { display: block; }
+  .result-emoji { font-size: 3rem; margin-bottom: 12px; }
+  .result-title { font-family: 'Fraunces', serif; font-size: 1.8rem; margin-bottom: 8px; }
+  .result-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 24px; }
+  .result-stats {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .stat-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 16px 24px;
+    text-align: center;
+  }
+  .stat-num { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; }
+  .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Mode panels */
+  .mode-panel { display: none; }
+  .mode-panel.active { display: block; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+  .pop { animation: pop 0.25s ease; }
+
+  /* Decorative rule */
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  @media (max-width: 600px) {
+    header { padding: 14px 16px; }
+    .mode-bar { padding: 0 8px; }
+    .filter-bar { padding: 10px 16px; }
+    main { padding: 20px 12px 80px; margin-top: 20px; }
+    .fc-verb { font-size: 2.2rem; }
+    .options-grid { grid-template-columns: 1fr; }
+    .sentence-display { font-size: 1.2rem; }
+    .blank-input { font-size: 1.2rem; width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Verba<span>Mente</span></div>
+  <div class="score-badge">
+    <div class="score-item"><span class="score-num" id="totalCorrect">0</span><span class="score-label">Correctas</span></div>
+    <div class="score-item"><span class="score-num" id="totalAnswered">0</span><span class="score-label">Intentos</span></div>
+    <div class="score-item"><span class="score-num" id="totalPct">—</span><span class="score-label">Acierto</span></div>
+  </div>
+</header>
+
+<nav class="mode-bar">
+  <button class="mode-btn active" onclick="switchMode('flashcard')" id="btn-flashcard">
+    <span class="mode-icon">🃏</span> Flashcards
+  </button>
+  <button class="mode-btn" onclick="switchMode('completar')" id="btn-completar">
+    <span class="mode-icon">✏️</span> Completar frases
+  </button>
+  <button class="mode-btn" onclick="switchMode('multiple')" id="btn-multiple">
+    <span class="mode-icon">☑️</span> Opción múltiple
+  </button>
+  <button class="mode-btn" onclick="switchMode('libre')" id="btn-libre">
+    <span class="mode-icon">📝</span> Escritura libre
+  </button>
+</nav>
+
+<div class="filter-bar">
+  <span class="filter-label">Tiempo:</span>
+  <button class="filter-chip active" onclick="setTense('all', this)">Todos</button>
+  <button class="filter-chip" onclick="setTense('presente', this)">Presente</button>
+  <button class="filter-chip" onclick="setTense('indefinido', this)">Indefinido</button>
+  <button class="filter-chip" onclick="setTense('imperfecto', this)">Imperfecto</button>
+  <button class="filter-chip" onclick="setTense('perfecto', this)">Perfecto</button>
+  <button class="filter-chip" onclick="setTense('futuro', this)">Futuro</button>
+  <button class="filter-chip" onclick="setTense('subjuntivo', this)">Subjuntivo</button>
+</div>
+
+<main>
+
+  <!-- ===== FLASHCARD MODE ===== -->
+  <div class="mode-panel active" id="panel-flashcard">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="fc-progress-text">Tarjeta 1 de 12</span>
+        <span id="fc-streak">🔥 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="fc-progress-bar" style="width:0%"></div></div>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="fc-face fc-front">
+          <div class="fc-label">Verbo</div>
+          <div class="fc-tense-badge" id="fc-tense-label">presente</div>
+          <div class="fc-verb" id="fc-verb">hablar</div>
+          <div class="fc-context" id="fc-context">verbo regular -ar</div>
+          <div class="fc-hint">Toca para ver la conjugación →</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label" style="color:rgba(255,255,255,0.4)">Conjugación completa</div>
+          <table class="fc-table" id="fc-table"></table>
+        </div>
+      </div>
+    </div>
+    <div class="fc-controls" id="fc-controls-flip">
+      <button class="btn btn-outline" onclick="nextCard(-1)">← Anterior</button>
+      <button class="btn btn-primary" onclick="flipCard()">Voltear tarjeta</button>
+      <button class="btn btn-outline" onclick="nextCard(1)">Siguiente →</button>
+    </div>
+    <div class="fc-controls" id="fc-controls-rate" style="display:none">
+      <button class="btn btn-bad" onclick="rateCard(false)">✗ No lo sabía</button>
+      <button class="btn btn-good" onclick="rateCard(true)">✓ Lo sabía</button>
+    </div>
+  </div>
+
+  <!-- ===== COMPLETAR FRASES ===== -->
+  <div class="mode-panel" id="panel-completar">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="cp-progress-text">Ejercicio 1 de 10</span>
+        <span id="cp-score">✓ 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="cp-progress-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card" id="cp-card">
+      <div class="exercise-header">
+        <span class="exercise-title">Completa la frase con la forma correcta</span>
+        <span class="tense-tag" id="cp-tense-tag">presente</span>
+      </div>
+      <div class="exercise-body">
+        <p class="hint-text">Verbo: <strong id="cp-verb-hint">hablar</strong> — <em id="cp-person-hint">3ª persona singular</em></p>
+        <div class="sentence-display" id="cp-sentence"></div>
+        <div class="feedback-box" id="cp-feedback">
+          <span class="feedback-icon" id="cp-fb-icon"></span>
+          <span id="cp-fb-text"></span>
+        </div>
+        <div style="margin-top:24px; display:flex; gap:12px;">
+          <button class="btn btn-primary" id="cp-check-btn" onclick="checkCompletar()">Comprobar</button>
+          <button class="btn btn-outline" id="cp-next-btn" onclick="nextCompletar()" style="display:none">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+    <div class="result-summary" id="cp-result">
+      <div class="result-emoji" id="cp-result-emoji">🎉</div>
+      <div class="result-title" id="cp-result-title">¡Muy bien!</div>
+      <div class="result-sub" id="cp-result-sub">Has completado todos los ejercicios</div>
+      <div class="result-stats">
+        <div class="stat-box"><div class="stat-num" id="cp-res-correct">0</div><div class="stat-label">Correctas</div></div>
+        <div class="stat-box"><div class="stat-num" id="cp-res-total">0</div><div class="stat-label">Total</div></div>
+        <div class="stat-box"><div class="stat-num" id="cp-res-pct">0%</div><div class="stat-label">Acierto</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="resetCompletar()">Volver a intentar</button>
+    </div>
+  </div>
+
+  <!-- ===== OPCIÓN MÚLTIPLE ===== -->
+  <div class="mode-panel" id="panel-multiple">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="mc-progress-text">Pregunta 1 de 10</span>
+        <span id="mc-score">✓ 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="mc-progress-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card" id="mc-card">
+      <div class="exercise-header">
+        <span class="exercise-title">Elige la forma correcta</span>
+        <span class="tense-tag" id="mc-tense-tag">presente</span>
+      </div>
+      <div class="exercise-body">
+        <p class="hint-text">Verbo: <strong id="mc-verb-hint"></strong> — <em id="mc-context-hint"></em></p>
+        <div class="sentence-display" id="mc-sentence"></div>
+        <div class="options-grid" id="mc-options"></div>
+        <div class="feedback-box" id="mc-feedback" style="margin-top:16px">
+          <span class="feedback-icon" id="mc-fb-icon"></span>
+          <span id="mc-fb-text"></span>
+        </div>
+        <div style="margin-top:20px">
+          <button class="btn btn-outline" id="mc-next-btn" onclick="nextMultiple()" style="display:none">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+    <div class="result-summary" id="mc-result">
+      <div class="result-emoji" id="mc-result-emoji">🎉</div>
+      <div class="result-title" id="mc-result-title">¡Excelente!</div>
+      <div class="result-sub">Has terminado todas las preguntas</div>
+      <div class="result-stats">
+        <div class="stat-box"><div class="stat-num" id="mc-res-correct">0</div><div class="stat-label">Correctas</div></div>
+        <div class="stat-box"><div class="stat-num" id="mc-res-total">0</div><div class="stat-label">Total</div></div>
+        <div class="stat-box"><div class="stat-num" id="mc-res-pct">0%</div><div class="stat-label">Acierto</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="resetMultiple()">Volver a intentar</button>
+    </div>
+  </div>
+
+  <!-- ===== ESCRITURA LIBRE ===== -->
+  <div class="mode-panel" id="panel-libre">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="lb-progress-text">Verbo 1 de 8</span>
+        <span id="lb-score">✓ 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="lb-progress-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card" id="lb-card">
+      <div class="exercise-header">
+        <span class="exercise-title">Conjuga el verbo completo</span>
+        <span class="tense-tag" id="lb-tense-tag">presente</span>
+      </div>
+      <div class="exercise-body">
+        <p class="hint-text" style="margin-bottom:20px">Completa todas las personas del verbo: <strong id="lb-verb-display"></strong></p>
+        <div class="conjugation-table-wrap">
+          <table class="conj-table">
+            <thead><tr><th>Pronombre</th><th>Forma verbal</th></tr></thead>
+            <tbody id="lb-tbody"></tbody>
+          </table>
+        </div>
+        <div class="feedback-box" id="lb-feedback" style="margin-top:16px">
+          <span class="feedback-icon" id="lb-fb-icon"></span>
+          <span id="lb-fb-text"></span>
+        </div>
+        <div style="margin-top:20px; display:flex; gap:12px;">
+          <button class="btn btn-primary" id="lb-check-btn" onclick="checkLibre()">Comprobar</button>
+          <button class="btn btn-outline" id="lb-next-btn" onclick="nextLibre()" style="display:none">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+    <div class="result-summary" id="lb-result">
+      <div class="result-emoji" id="lb-result-emoji">🎉</div>
+      <div class="result-title" id="lb-result-title">¡Fantástico!</div>
+      <div class="result-sub">Has conjugado todos los verbos</div>
+      <div class="result-stats">
+        <div class="stat-box"><div class="stat-num" id="lb-res-correct">0</div><div class="stat-label">Formas correctas</div></div>
+        <div class="stat-box"><div class="stat-num" id="lb-res-total">0</div><div class="stat-label">Total</div></div>
+        <div class="stat-box"><div class="stat-num" id="lb-res-pct">0%</div><div class="stat-label">Acierto</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="resetLibre()">Volver a intentar</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ==========================================
+// DATA
+// ==========================================
+const pronouns = ['yo','tú','él/ella','nosotros','ellos/ellas'];
+
+const verbData = {
+  // ── REGULARES -AR ──────────────────────────────
+  hablar: {
+    type: 'regular -ar', context: 'regular -ar',
+    presente:   ['hablo','hablas','habla','hablamos','hablan'],
+    indefinido: ['hablé','hablaste','habló','hablamos','hablaron'],
+    imperfecto: ['hablaba','hablabas','hablaba','hablábamos','hablaban'],
+    perfecto:   ['he hablado','has hablado','ha hablado','hemos hablado','han hablado'],
+    futuro:     ['hablaré','hablarás','hablará','hablaremos','hablarán'],
+    subjuntivo: ['hable','hables','hable','hablemos','hablen'],
+  },
+  trabajar: {
+    type: 'regular -ar', context: 'regular -ar',
+    presente:   ['trabajo','trabajas','trabaja','trabajamos','trabajan'],
+    indefinido: ['trabajé','trabajaste','trabajó','trabajamos','trabajaron'],
+    imperfecto: ['trabajaba','trabajabas','trabajaba','trabajábamos','trabajaban'],
+    perfecto:   ['he trabajado','has trabajado','ha trabajado','hemos trabajado','han trabajado'],
+    futuro:     ['trabajaré','trabajarás','trabajará','trabajaremos','trabajarán'],
+    subjuntivo: ['trabaje','trabajes','trabaje','trabajemos','trabajen'],
+  },
+  llamar: {
+    type: 'regular -ar', context: 'regular -ar',
+    presente:   ['llamo','llamas','llama','llamamos','llaman'],
+    indefinido: ['llamé','llamaste','llamó','llamamos','llamaron'],
+    imperfecto: ['llamaba','llamabas','llamaba','llamábamos','llamaban'],
+    perfecto:   ['he llamado','has llamado','ha llamado','hemos llamado','han llamado'],
+    futuro:     ['llamaré','llamarás','llamará','llamaremos','llamarán'],
+    subjuntivo: ['llame','llames','llame','llamemos','llamen'],
+  },
+  comprar: {
+    type: 'regular -ar', context: 'regular -ar',
+    presente:   ['compro','compras','compra','compramos','compran'],
+    indefinido: ['compré','compraste','compró','compramos','compraron'],
+    imperfecto: ['compraba','comprabas','compraba','comprábamos','compraban'],
+    perfecto:   ['he comprado','has comprado','ha comprado','hemos comprado','han comprado'],
+    futuro:     ['compraré','comprarás','comprará','compraremos','comprarán'],
+    subjuntivo: ['compre','compres','compre','compremos','compren'],
+  },
+  escuchar: {
+    type: 'regular -ar', context: 'regular -ar',
+    presente:   ['escucho','escuchas','escucha','escuchamos','escuchan'],
+    indefinido: ['escuché','escuchaste','escuchó','escuchamos','escucharon'],
+    imperfecto: ['escuchaba','escuchabas','escuchaba','escuchábamos','escuchaban'],
+    perfecto:   ['he escuchado','has escuchado','ha escuchado','hemos escuchado','han escuchado'],
+    futuro:     ['escucharé','escucharás','escuchará','escucharemos','escucharán'],
+    subjuntivo: ['escuche','escuches','escuche','escuchemos','escuchen'],
+  },
+  // ── REGULARES -ER ──────────────────────────────
+  comer: {
+    type: 'regular -er', context: 'regular -er',
+    presente:   ['como','comes','come','comemos','comen'],
+    indefinido: ['comí','comiste','comió','comimos','comieron'],
+    imperfecto: ['comía','comías','comía','comíamos','comían'],
+    perfecto:   ['he comido','has comido','ha comido','hemos comido','han comido'],
+    futuro:     ['comeré','comerás','comerá','comeremos','comerán'],
+    subjuntivo: ['coma','comas','coma','comamos','coman'],
+  },
+  beber: {
+    type: 'regular -er', context: 'regular -er',
+    presente:   ['bebo','bebes','bebe','bebemos','beben'],
+    indefinido: ['bebí','bebiste','bebió','bebimos','bebieron'],
+    imperfecto: ['bebía','bebías','bebía','bebíamos','bebían'],
+    perfecto:   ['he bebido','has bebido','ha bebido','hemos bebido','han bebido'],
+    futuro:     ['beberé','beberás','beberá','beberemos','beberán'],
+    subjuntivo: ['beba','bebas','beba','bebamos','beban'],
+  },
+  leer: {
+    type: 'regular -er', context: 'regular -er',
+    presente:   ['leo','lees','lee','leemos','leen'],
+    indefinido: ['leí','leíste','leyó','leímos','leyeron'],
+    imperfecto: ['leía','leías','leía','leíamos','leían'],
+    perfecto:   ['he leído','has leído','ha leído','hemos leído','han leído'],
+    futuro:     ['leeré','leerás','leerá','leeremos','leerán'],
+    subjuntivo: ['lea','leas','lea','leamos','lean'],
+  },
+  // ── REGULARES -IR ──────────────────────────────
+  vivir: {
+    type: 'regular -ir', context: 'regular -ir',
+    presente:   ['vivo','vives','vive','vivimos','viven'],
+    indefinido: ['viví','viviste','vivió','vivimos','vivieron'],
+    imperfecto: ['vivía','vivías','vivía','vivíamos','vivían'],
+    perfecto:   ['he vivido','has vivido','ha vivido','hemos vivido','han vivido'],
+    futuro:     ['viviré','vivirás','vivirá','viviremos','vivirán'],
+    subjuntivo: ['viva','vivas','viva','vivamos','vivan'],
+  },
+  escribir: {
+    type: 'regular -ir', context: 'regular -ir',
+    presente:   ['escribo','escribes','escribe','escribimos','escriben'],
+    indefinido: ['escribí','escribiste','escribió','escribimos','escribieron'],
+    imperfecto: ['escribía','escribías','escribía','escribíamos','escribían'],
+    perfecto:   ['he escrito','has escrito','ha escrito','hemos escrito','han escrito'],
+    futuro:     ['escribiré','escribirás','escribirá','escribiremos','escribirán'],
+    subjuntivo: ['escriba','escribas','escriba','escribamos','escriban'],
+  },
+  // ── IRREGULARES MUY COMUNES ────────────────────
+  ser: {
+    type: 'irregular', context: 'irregular — muy frecuente',
+    presente:   ['soy','eres','es','somos','son'],
+    indefinido: ['fui','fuiste','fue','fuimos','fueron'],
+    imperfecto: ['era','eras','era','éramos','eran'],
+    perfecto:   ['he sido','has sido','ha sido','hemos sido','han sido'],
+    futuro:     ['seré','serás','será','seremos','serán'],
+    subjuntivo: ['sea','seas','sea','seamos','sean'],
+  },
+  estar: {
+    type: 'irregular', context: 'irregular — muy frecuente',
+    presente:   ['estoy','estás','está','estamos','están'],
+    indefinido: ['estuve','estuviste','estuvo','estuvimos','estuvieron'],
+    imperfecto: ['estaba','estabas','estaba','estábamos','estaban'],
+    perfecto:   ['he estado','has estado','ha estado','hemos estado','han estado'],
+    futuro:     ['estaré','estarás','estará','estaremos','estarán'],
+    subjuntivo: ['esté','estés','esté','estemos','estén'],
+  },
+  tener: {
+    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    presente:   ['tengo','tienes','tiene','tenemos','tienen'],
+    indefinido: ['tuve','tuviste','tuvo','tuvimos','tuvieron'],
+    imperfecto: ['tenía','tenías','tenía','teníamos','tenían'],
+    perfecto:   ['he tenido','has tenido','ha tenido','hemos tenido','han tenido'],
+    futuro:     ['tendré','tendrás','tendrá','tendremos','tendrán'],
+    subjuntivo: ['tenga','tengas','tenga','tengamos','tengan'],
+  },
+  haber: {
+    type: 'irregular', context: 'irregular — auxiliar del perfecto',
+    presente:   ['he','has','ha','hemos','han'],
+    indefinido: ['hube','hubiste','hubo','hubimos','hubieron'],
+    imperfecto: ['había','habías','había','habíamos','habían'],
+    perfecto:   ['he habido','has habido','ha habido','hemos habido','han habido'],
+    futuro:     ['habré','habrás','habrá','habremos','habrán'],
+    subjuntivo: ['haya','hayas','haya','hayamos','hayan'],
+  },
+  ir: {
+    type: 'irregular', context: 'irregular — muy irregular',
+    presente:   ['voy','vas','va','vamos','van'],
+    indefinido: ['fui','fuiste','fue','fuimos','fueron'],
+    imperfecto: ['iba','ibas','iba','íbamos','iban'],
+    perfecto:   ['he ido','has ido','ha ido','hemos ido','han ido'],
+    futuro:     ['iré','irás','irá','iremos','irán'],
+    subjuntivo: ['vaya','vayas','vaya','vayamos','vayan'],
+  },
+  hacer: {
+    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    presente:   ['hago','haces','hace','hacemos','hacen'],
+    indefinido: ['hice','hiciste','hizo','hicimos','hicieron'],
+    imperfecto: ['hacía','hacías','hacía','hacíamos','hacían'],
+    perfecto:   ['he hecho','has hecho','ha hecho','hemos hecho','han hecho'],
+    futuro:     ['haré','harás','hará','haremos','harán'],
+    subjuntivo: ['haga','hagas','haga','hagamos','hagan'],
+  },
+  poder: {
+    type: 'irregular o→ue', context: 'irregular — diptongo o→ue',
+    presente:   ['puedo','puedes','puede','podemos','pueden'],
+    indefinido: ['pude','pudiste','pudo','pudimos','pudieron'],
+    imperfecto: ['podía','podías','podía','podíamos','podían'],
+    perfecto:   ['he podido','has podido','ha podido','hemos podido','han podido'],
+    futuro:     ['podré','podrás','podrá','podremos','podrán'],
+    subjuntivo: ['pueda','puedas','pueda','podamos','puedan'],
+  },
+  querer: {
+    type: 'irregular e→ie', context: 'irregular — diptongo e→ie',
+    presente:   ['quiero','quieres','quiere','queremos','quieren'],
+    indefinido: ['quise','quisiste','quiso','quisimos','quisieron'],
+    imperfecto: ['quería','querías','quería','queríamos','querían'],
+    perfecto:   ['he querido','has querido','ha querido','hemos querido','han querido'],
+    futuro:     ['querré','querrás','querrá','querremos','querrán'],
+    subjuntivo: ['quiera','quieras','quiera','queramos','quieran'],
+  },
+  saber: {
+    type: 'irregular', context: 'irregular — 1ª persona y futuro sincopado',
+    presente:   ['sé','sabes','sabe','sabemos','saben'],
+    indefinido: ['supe','supiste','supo','supimos','supieron'],
+    imperfecto: ['sabía','sabías','sabía','sabíamos','sabían'],
+    perfecto:   ['he sabido','has sabido','ha sabido','hemos sabido','han sabido'],
+    futuro:     ['sabré','sabrás','sabrá','sabremos','sabrán'],
+    subjuntivo: ['sepa','sepas','sepa','sepamos','sepan'],
+  },
+  venir: {
+    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    presente:   ['vengo','vienes','viene','venimos','vienen'],
+    indefinido: ['vine','viniste','vino','vinimos','vinieron'],
+    imperfecto: ['venía','venías','venía','veníamos','venían'],
+    perfecto:   ['he venido','has venido','ha venido','hemos venido','han venido'],
+    futuro:     ['vendré','vendrás','vendrá','vendremos','vendrán'],
+    subjuntivo: ['venga','vengas','venga','vengamos','vengan'],
+  },
+  decir: {
+    type: 'irregular', context: 'irregular — go-go / e→i / futuro sincopado',
+    presente:   ['digo','dices','dice','decimos','dicen'],
+    indefinido: ['dije','dijiste','dijo','dijimos','dijeron'],
+    imperfecto: ['decía','decías','decía','decíamos','decían'],
+    perfecto:   ['he dicho','has dicho','ha dicho','hemos dicho','han dicho'],
+    futuro:     ['diré','dirás','dirá','diremos','dirán'],
+    subjuntivo: ['diga','digas','diga','digamos','digan'],
+  },
+  dar: {
+    type: 'irregular', context: 'irregular — 1ª persona y pretérito',
+    presente:   ['doy','das','da','damos','dan'],
+    indefinido: ['di','diste','dio','dimos','dieron'],
+    imperfecto: ['daba','dabas','daba','dábamos','daban'],
+    perfecto:   ['he dado','has dado','ha dado','hemos dado','han dado'],
+    futuro:     ['daré','darás','dará','daremos','darán'],
+    subjuntivo: ['dé','des','dé','demos','den'],
+  },
+  ver: {
+    type: 'irregular', context: 'irregular — imperfecto y participio',
+    presente:   ['veo','ves','ve','vemos','ven'],
+    indefinido: ['vi','viste','vio','vimos','vieron'],
+    imperfecto: ['veía','veías','veía','veíamos','veían'],
+    perfecto:   ['he visto','has visto','ha visto','hemos visto','han visto'],
+    futuro:     ['veré','verás','verá','veremos','verán'],
+    subjuntivo: ['vea','veas','vea','veamos','vean'],
+  },
+  poner: {
+    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    presente:   ['pongo','pones','pone','ponemos','ponen'],
+    indefinido: ['puse','pusiste','puso','pusimos','pusieron'],
+    imperfecto: ['ponía','ponías','ponía','poníamos','ponían'],
+    perfecto:   ['he puesto','has puesto','ha puesto','hemos puesto','han puesto'],
+    futuro:     ['pondré','pondrás','pondrá','pondremos','pondrán'],
+    subjuntivo: ['ponga','pongas','ponga','pongamos','pongan'],
+  },
+  salir: {
+    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    presente:   ['salgo','sales','sale','salimos','salen'],
+    indefinido: ['salí','saliste','salió','salimos','salieron'],
+    imperfecto: ['salía','salías','salía','salíamos','salían'],
+    perfecto:   ['he salido','has salido','ha salido','hemos salido','han salido'],
+    futuro:     ['saldré','saldrás','saldrá','saldremos','saldrán'],
+    subjuntivo: ['salga','salgas','salga','salgamos','salgan'],
+  },
+  // ── CON CAMBIO VOCÁLICO ────────────────────────
+  dormir: {
+    type: 'irregular o→ue/u', context: 'irregular — cambio vocálico o→ue',
+    presente:   ['duermo','duermes','duerme','dormimos','duermen'],
+    indefinido: ['dormí','dormiste','durmió','dormimos','durmieron'],
+    imperfecto: ['dormía','dormías','dormía','dormíamos','dormían'],
+    perfecto:   ['he dormido','has dormido','ha dormido','hemos dormido','han dormido'],
+    futuro:     ['dormiré','dormirás','dormirá','dormiremos','dormirán'],
+    subjuntivo: ['duerma','duermas','duerma','durmamos','duerman'],
+  },
+  pedir: {
+    type: 'irregular e→i', context: 'irregular — cambio vocálico e→i',
+    presente:   ['pido','pides','pide','pedimos','piden'],
+    indefinido: ['pedí','pediste','pidió','pedimos','pidieron'],
+    imperfecto: ['pedía','pedías','pedía','pedíamos','pedían'],
+    perfecto:   ['he pedido','has pedido','ha pedido','hemos pedido','han pedido'],
+    futuro:     ['pediré','pedirás','pedirá','pediremos','pedirán'],
+    subjuntivo: ['pida','pidas','pida','pidamos','pidan'],
+  },
+  jugar: {
+    type: 'irregular u→ue', context: 'irregular — diptongo u→ue',
+    presente:   ['juego','juegas','juega','jugamos','juegan'],
+    indefinido: ['jugué','jugaste','jugó','jugamos','jugaron'],
+    imperfecto: ['jugaba','jugabas','jugaba','jugábamos','jugaban'],
+    perfecto:   ['he jugado','has jugado','ha jugado','hemos jugado','han jugado'],
+    futuro:     ['jugaré','jugarás','jugará','jugaremos','jugarán'],
+    subjuntivo: ['juegue','juegues','juegue','juguemos','jueguen'],
+  },
+  // ── REFLEXIVOS COMUNES ─────────────────────────
+  levantarse: {
+    type: 'regular reflexivo', context: 'regular -ar reflexivo',
+    presente:   ['me levanto','te levantas','se levanta','nos levantamos','se levantan'],
+    indefinido: ['me levanté','te levantaste','se levantó','nos levantamos','se levantaron'],
+    imperfecto: ['me levantaba','te levantabas','se levantaba','nos levantábamos','se levantaban'],
+    perfecto:   ['me he levantado','te has levantado','se ha levantado','nos hemos levantado','se han levantado'],
+    futuro:     ['me levantaré','te levantarás','se levantará','nos levantaremos','se levantarán'],
+    subjuntivo: ['me levante','te levantes','se levante','nos levantemos','se levanten'],
+  },
+};
+
+const tenseLabels = {
+  presente: 'Presente indicativo',
+  indefinido: 'Pretérito indefinido',
+  imperfecto: 'Pretérito imperfecto',
+  perfecto: 'Pretérito perfecto compuesto',
+  futuro: 'Futuro simple',
+  subjuntivo: 'Presente de subjuntivo',
+};
+
+const tenses = ['presente','indefinido','imperfecto','perfecto','subjuntivo'];
+const verbs = Object.keys(verbData);
+
+// ──────────────────────────────────────────────────────────
+// FRASES PARA "COMPLETAR" Y "OPCIÓN MÚLTIPLE"
+// Formato: [frase con ___, verbo, índice pronombre, tiempo, respuesta]
+// ──────────────────────────────────────────────────────────
+const sentences = [
+  // PRESENTE
+  ['Cada mañana yo ___ a las siete.', 'levantarse', 0, 'presente', 'me levanto'],
+  ['Ella ___ muy bien el inglés.', 'hablar', 2, 'presente', 'habla'],
+  ['¿A qué hora ___ normalmente? (tú)', 'levantarse', 1, 'presente', 'te levantas'],
+  ['Ellos ___ en una empresa tecnológica.', 'trabajar', 5, 'presente', 'trabajan'],
+  ['Yo no ___ dónde están mis llaves.', 'saber', 0, 'presente', 'sé'],
+  ['Nosotros siempre ___ la radio en el coche.', 'escuchar', 3, 'presente', 'escuchamos'],
+  ['Él ___ muy cansado hoy.', 'estar', 2, 'presente', 'está'],
+  ['Yo ___ que estudiar más.', 'tener', 0, 'presente', 'tengo'],
+  ['Tú siempre ___ lo que piensas.', 'decir', 1, 'presente', 'dices'],
+  ['Mi madre ___ novelas históricas.', 'leer', 2, 'presente', 'lee'],
+  ['Nosotros ___ en el centro de la ciudad.', 'vivir', 3, 'presente', 'vivimos'],
+  ['Yo ___ al gimnasio tres veces por semana.', 'ir', 0, 'presente', 'voy'],
+  ['Él ___ la comida en la mesa.', 'poner', 2, 'presente', 'pone'],
+
+  // INDEFINIDO
+  ['Ayer ___ una película muy buena.', 'ver', 3, 'indefinido', 'vimos'],
+  ['El año pasado ella ___ en París.', 'vivir', 2, 'indefinido', 'vivió'],
+  ['¿(Tú) ___ con el jefe ayer?', 'hablar', 1, 'indefinido', 'hablaste'],
+  ['Anoche (yo) ___ muy tarde.', 'salir', 0, 'indefinido', 'salí'],
+  ['Ellos ___ una pizza entera.', 'comer', 5, 'indefinido', 'comieron'],
+  ['¿Cuándo ___ tú a Madrid?', 'ir', 1, 'indefinido', 'fuiste'],
+  ['Ella me ___ un regalo precioso.', 'dar', 2, 'indefinido', 'dio'],
+  ['Yo ___ la verdad en ese momento.', 'decir', 0, 'indefinido', 'dije'],
+  ['Nosotros ___ el problema juntos.', 'hablar', 3, 'indefinido', 'hablamos'],
+  ['Él ___ muy tarde anoche.', 'venir', 2, 'indefinido', 'vino'],
+  ['Yo ___ las llaves en el bolso.', 'poner', 0, 'indefinido', 'puse'],
+  ['Ellos ___ todo lo necesario.', 'saber', 5, 'indefinido', 'supieron'],
+  ['Nosotros ___ en ese hotel la semana pasada.', 'estar', 3, 'indefinido', 'estuvimos'],
+  ['Tú ___ muy bien en la reunión.', 'hablar', 1, 'indefinido', 'hablaste'],
+
+  // IMPERFECTO
+  ['De niño, yo ___ al fútbol todos los días.', 'jugar', 0, 'imperfecto', 'jugaba'],
+  ['Cuando éramos jóvenes, ___ mucho en verano.', 'salir', 3, 'imperfecto', 'salíamos'],
+  ['Antes, ella siempre ___ música clásica.', 'escuchar', 2, 'imperfecto', 'escuchaba'],
+  ['De pequeño, él ___ en el campo.', 'vivir', 2, 'imperfecto', 'vivía'],
+  ['Mis padres ___ en esa fábrica.', 'trabajar', 5, 'imperfecto', 'trabajaban'],
+  ['Cuando llegué, ellos ___ la televisión.', 'ver', 5, 'imperfecto', 'veían'],
+  ['Antes yo ___ ocho horas cada noche.', 'dormir', 0, 'imperfecto', 'dormía'],
+  ['Ella ___ muy tímida de joven.', 'ser', 2, 'imperfecto', 'era'],
+  ['Nosotros ___ muy bien cuando vivíamos allí.', 'estar', 3, 'imperfecto', 'estábamos'],
+  ['¿Tú ___ mucho cuando eras pequeño?', 'leer', 1, 'imperfecto', 'leías'],
+
+  // PERFECTO
+  ['Esta mañana yo ___ dos cafés.', 'beber', 0, 'perfecto', 'he bebido'],
+  ['¿___ tú alguna vez en Tokio?', 'estar', 1, 'perfecto', 'has estado'],
+  ['Ella ___ tres novelas este año.', 'leer', 2, 'perfecto', 'ha leído'],
+  ['Nosotros ___ el informe esta tarde.', 'hacer', 3, 'perfecto', 'hemos hecho'],
+  ['Ellos ya ___ el apartamento.', 'comprar', 5, 'perfecto', 'han comprado'],
+  ['Yo nunca ___ paella.', 'comer', 0, 'perfecto', 'he comido'],
+  ['Él me ___ esta mañana.', 'llamar', 2, 'perfecto', 'ha llamado'],
+  ['Tú ___ muy tarde hoy.', 'venir', 1, 'perfecto', 'has venido'],
+  ['Nosotros ___ todo el día.', 'trabajar', 3, 'perfecto', 'hemos trabajado'],
+
+  // FUTURO
+  ['Mañana yo ___ con mis amigos.', 'hablar', 0, 'futuro', 'hablaré'],
+  ['El próximo año ella ___ en Londres.', 'vivir', 2, 'futuro', 'vivirá'],
+  ['¿Tú ___ a la fiesta el sábado?', 'venir', 1, 'futuro', 'vendrás'],
+  ['Ellos ___ los billetes la semana que viene.', 'comprar', 5, 'futuro', 'comprarán'],
+  ['Nosotros ___ una reunión mañana.', 'tener', 3, 'futuro', 'tendremos'],
+  ['Yo ___ todo lo posible para ayudaros.', 'hacer', 0, 'futuro', 'haré'],
+  ['Él ___ la verdad tarde o temprano.', 'saber', 2, 'futuro', 'sabrá'],
+  ['Tú ___ muy feliz en tu nuevo trabajo.', 'estar', 1, 'futuro', 'estarás'],
+  ['Ellas ___ los resultados mañana.', 'dar', 5, 'futuro', 'darán'],
+
+  // SUBJUNTIVO
+  ['Quiero que (tú) ___ la verdad.', 'decir', 1, 'subjuntivo', 'digas'],
+  ['Espero que a ella ___ bien el examen.', 'irse', 2, 'subjuntivo', 'le vaya'],
+  ['Ojalá (nosotros) ___ ganar el partido.', 'poder', 3, 'subjuntivo', 'podamos'],
+  ['No creo que ellos ___ la solución.', 'saber', 5, 'subjuntivo', 'sepan'],
+  ['Quiero que (tú) ___ más tranquilo.', 'estar', 1, 'subjuntivo', 'estés'],
+  ['Es necesario que (yo) ___ más.', 'dormir', 0, 'subjuntivo', 'duerma'],
+  ['Ojalá (él) ___ pronto.', 'venir', 2, 'subjuntivo', 'venga'],
+  ['Espero que (ellos) ___ bien.', 'estar', 5, 'subjuntivo', 'estén'],
+  ['Que (ustedes) ___ buen viaje.', 'tener', 5, 'subjuntivo', 'tengan'],
+];
+
+// ==========================================
+// STATE
+// ==========================================
+let currentTense = 'all';
+let totalCorrect = 0, totalAnswered = 0;
+
+// Flashcard state
+let fcCards = [], fcIndex = 0, fcFlipped = false, fcStreak = 0;
+
+// Completar state
+let cpItems = [], cpIndex = 0, cpCorrect = 0, cpAnswered = false;
+
+// Multiple choice state
+let mcItems = [], mcIndex = 0, mcCorrect = 0, mcAnswered = false;
+
+// Libre state
+let lbItems = [], lbIndex = 0, lbCorrect = 0, lbTotal = 0, lbAnswered = false;
+
+// ==========================================
+// GLOBAL SCORE
+// ==========================================
+function addScore(correct) {
+  totalAnswered++;
+  if (correct) totalCorrect++;
+  document.getElementById('totalCorrect').textContent = totalCorrect;
+  document.getElementById('totalAnswered').textContent = totalAnswered;
+  const pct = Math.round((totalCorrect / totalAnswered) * 100);
+  document.getElementById('totalPct').textContent = pct + '%';
+}
+
+// ==========================================
+// UTILS
+// ==========================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getFilteredTenses() {
+  return currentTense === 'all' ? tenses : [currentTense];
+}
+
+function getRandomTense() {
+  const t = getFilteredTenses();
+  return t[Math.floor(Math.random() * t.length)];
+}
+
+function normalize(s) {
+  return s.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ');
+}
+
+// ==========================================
+// MODE SWITCHING
+// ==========================================
+function switchMode(mode) {
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + mode).classList.add('active');
+  document.getElementById('btn-' + mode).classList.add('active');
+  if (mode === 'flashcard') initFlashcards();
+  if (mode === 'completar') initCompletar();
+  if (mode === 'multiple') initMultiple();
+  if (mode === 'libre') initLibre();
+}
+
+function setTense(tense, el) {
+  currentTense = tense;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const activeMode = document.querySelector('.mode-btn.active').id.replace('btn-','');
+  switchMode(activeMode);
+}
+
+// ==========================================
+// FLASHCARDS
+// ==========================================
+function buildFlashcards() {
+  const cards = [];
+  const filteredT = getFilteredTenses();
+  for (const verb of shuffle(verbs)) {
+    for (const tense of shuffle(filteredT)) {
+      cards.push({ verb, tense });
+    }
+  }
+  return cards;
+}
+
+function initFlashcards() {
+  fcCards = buildFlashcards();
+  fcIndex = 0;
+  fcFlipped = false;
+  fcStreak = 0;
+  renderFlashcard();
+}
+
+function renderFlashcard() {
+  const card = fcCards[fcIndex];
+  const data = verbData[card.verb];
+  const conjs = data[card.tense];
+  
+  document.getElementById('fc-verb').textContent = card.verb;
+  document.getElementById('fc-context').textContent = data.context;
+  document.getElementById('fc-tense-label').textContent = tenseLabels[card.tense];
+  document.getElementById('fc-tense-label').textContent = tenseLabels[card.tense];
+
+  const tbody = document.getElementById('fc-table');
+  tbody.innerHTML = pronouns.map((p, i) =>
+    `<tr><td>${p}</td><td>${conjs[i]}</td></tr>`
+  ).join('');
+
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  fcFlipped = false;
+
+  document.getElementById('fc-controls-flip').style.display = 'flex';
+  document.getElementById('fc-controls-rate').style.display = 'none';
+
+  const pct = Math.round((fcIndex / fcCards.length) * 100);
+  document.getElementById('fc-progress-text').textContent = `Tarjeta ${fcIndex + 1} de ${fcCards.length}`;
+  document.getElementById('fc-progress-bar').style.width = pct + '%';
+  document.getElementById('fc-streak').textContent = `🔥 ${fcStreak}`;
+}
+
+function flipCard() {
+  const fc = document.getElementById('flashcard');
+  if (!fcFlipped) {
+    fc.classList.add('flipped');
+    fcFlipped = true;
+    document.getElementById('fc-controls-flip').style.display = 'none';
+    document.getElementById('fc-controls-rate').style.display = 'flex';
+  }
+}
+
+function rateCard(knew) {
+  addScore(knew);
+  if (knew) fcStreak++;
+  else fcStreak = 0;
+  nextCard(1);
+}
+
+function nextCard(dir) {
+  fcIndex = (fcIndex + dir + fcCards.length) % fcCards.length;
+  renderFlashcard();
+}
+
+// ==========================================
+// COMPLETAR FRASES
+// ==========================================
+function initCompletar() {
+  // Filter sentences by tense if needed
+  let pool = sentences;
+  if (currentTense !== 'all') {
+    pool = sentences.filter(s => s[3] === currentTense);
+    if (pool.length === 0) pool = sentences;
+  }
+  cpItems = shuffle(pool).slice(0, 10);
+  cpIndex = 0;
+  cpCorrect = 0;
+  cpAnswered = false;
+  document.getElementById('cp-card').style.display = '';
+  document.getElementById('cp-result').classList.remove('show');
+  renderCompletar();
+}
+
+function renderCompletar() {
+  const item = cpItems[cpIndex];
+  const [sent, verb, personIdx, tense, answer] = item;
+
+  document.getElementById('cp-tense-tag').textContent = tenseLabels[tense];
+  document.getElementById('cp-verb-hint').textContent = verb;
+  document.getElementById('cp-person-hint').textContent = pronouns[personIdx];
+
+  const sentHTML = sent.replace('___', `<input class="blank-input" id="cp-input" placeholder="..." autocomplete="off" onkeydown="if(event.key==='Enter')checkCompletar()">`);
+  document.getElementById('cp-sentence').innerHTML = sentHTML;
+
+  const fb = document.getElementById('cp-feedback');
+  fb.className = 'feedback-box';
+  cpAnswered = false;
+
+  document.getElementById('cp-check-btn').style.display = '';
+  document.getElementById('cp-next-btn').style.display = 'none';
+
+  const pct = Math.round((cpIndex / cpItems.length) * 100);
+  document.getElementById('cp-progress-text').textContent = `Ejercicio ${cpIndex + 1} de ${cpItems.length}`;
+  document.getElementById('cp-progress-bar').style.width = pct + '%';
+  document.getElementById('cp-score').textContent = `✓ ${cpCorrect}`;
+
+  setTimeout(() => { const inp = document.getElementById('cp-input'); if(inp) inp.focus(); }, 50);
+}
+
+function checkCompletar() {
+  if (cpAnswered) return;
+  const item = cpItems[cpIndex];
+  const answer = item[4];
+  const input = document.getElementById('cp-input');
+  const userVal = input ? input.value : '';
+  const correct = normalize(userVal) === normalize(answer);
+  cpAnswered = true;
+  addScore(correct);
+
+  const fb = document.getElementById('cp-feedback');
+  if (correct) {
+    cpCorrect++;
+    if (input) { input.classList.add('correct'); input.disabled = true; }
+    fb.className = 'feedback-box correct';
+    document.getElementById('cp-fb-icon').textContent = '✓';
+    document.getElementById('cp-fb-text').textContent = '¡Correcto! Muy bien.';
+  } else {
+    if (input) { input.classList.add('wrong'); input.disabled = true; }
+    fb.className = 'feedback-box wrong';
+    document.getElementById('cp-fb-icon').textContent = '✗';
+    document.getElementById('cp-fb-text').textContent = `La forma correcta es: "${answer}"`;
+  }
+  document.getElementById('cp-check-btn').style.display = 'none';
+  document.getElementById('cp-next-btn').style.display = '';
+  document.getElementById('cp-score').textContent = `✓ ${cpCorrect}`;
+}
+
+function nextCompletar() {
+  cpIndex++;
+  if (cpIndex >= cpItems.length) {
+    showResultCompletar();
+  } else {
+    renderCompletar();
+  }
+}
+
+function showResultCompletar() {
+  document.getElementById('cp-card').style.display = 'none';
+  const pct = Math.round((cpCorrect / cpItems.length) * 100);
+  document.getElementById('cp-res-correct').textContent = cpCorrect;
+  document.getElementById('cp-res-total').textContent = cpItems.length;
+  document.getElementById('cp-res-pct').textContent = pct + '%';
+  document.getElementById('cp-result-emoji').textContent = pct >= 80 ? '🎉' : pct >= 50 ? '💪' : '📚';
+  document.getElementById('cp-result-title').textContent = pct >= 80 ? '¡Excelente trabajo!' : pct >= 50 ? '¡Bien hecho!' : 'Sigue practicando';
+  document.getElementById('cp-result-sub').textContent = `Acertaste ${cpCorrect} de ${cpItems.length} frases`;
+  document.getElementById('cp-result').classList.add('show');
+}
+
+function resetCompletar() { initCompletar(); }
+
+// ==========================================
+// OPCIÓN MÚLTIPLE
+// ==========================================
+function buildMultipleItems() {
+  let pool = sentences;
+  if (currentTense !== 'all') {
+    pool = sentences.filter(s => s[3] === currentTense);
+    if (pool.length === 0) pool = sentences;
+  }
+  return shuffle(pool).slice(0, 12).map(item => {
+    const [sent, verb, personIdx, tense, correct] = item;
+    const distractors = new Set();
+    const vdata = verbData[verb];
+    if (vdata) {
+      for (const t of tenses) {
+        if (vdata[t]) vdata[t].forEach(f => { if (f !== correct) distractors.add(f); });
+      }
+    }
+    const distArr = shuffle([...distractors]).slice(0, 3);
+    while (distArr.length < 3) distArr.push(correct + (distArr.length % 2 === 0 ? 'n' : 's'));
+    const options = shuffle([correct, ...distArr.slice(0,3)]);
+    return { sentence: sent, verb, tense, personIdx, correct, options };
+  });
+}
+
+function initMultiple() {
+  mcItems = buildMultipleItems();
+  mcIndex = 0;
+  mcCorrect = 0;
+  mcAnswered = false;
+  document.getElementById('mc-card').style.display = '';
+  document.getElementById('mc-result').classList.remove('show');
+  renderMultiple();
+}
+
+function renderMultiple() {
+  const item = mcItems[mcIndex];
+  const { sentence, verb, tense, personIdx, correct, options } = item;
+
+  document.getElementById('mc-tense-tag').textContent = tenseLabels[tense];
+  document.getElementById('mc-verb-hint').textContent = verb;
+  document.getElementById('mc-context-hint').textContent = `${pronouns[personIdx]} — ${tenseLabels[tense]}`;
+
+  document.getElementById('mc-sentence').textContent = sentence;
+
+  const letters = ['A','B','C','D'];
+  document.getElementById('mc-options').innerHTML = options.map((opt, i) =>
+    `<button class="option-btn" id="mc-opt-${i}" onclick="selectOption(${i})">
+      <span class="option-letter">${letters[i]}</span>${opt}
+    </button>`
+  ).join('');
+
+  const fb = document.getElementById('mc-feedback');
+  fb.className = 'feedback-box';
+  mcAnswered = false;
+  document.getElementById('mc-next-btn').style.display = 'none';
+
+  const pct = Math.round((mcIndex / mcItems.length) * 100);
+  document.getElementById('mc-progress-text').textContent = `Pregunta ${mcIndex + 1} de ${mcItems.length}`;
+  document.getElementById('mc-progress-bar').style.width = pct + '%';
+  document.getElementById('mc-score').textContent = `✓ ${mcCorrect}`;
+}
+
+function selectOption(idx) {
+  if (mcAnswered) return;
+  mcAnswered = true;
+  const item = mcItems[mcIndex];
+  const chosen = item.options[idx];
+  const correct = chosen === item.correct;
+  addScore(correct);
+
+  const correctIdx = item.options.indexOf(item.correct);
+  document.getElementById(`mc-opt-${correctIdx}`).classList.add('correct');
+  if (!correct) document.getElementById(`mc-opt-${idx}`).classList.add('wrong');
+
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('mc-feedback');
+  if (correct) {
+    mcCorrect++;
+    fb.className = 'feedback-box correct';
+    document.getElementById('mc-fb-icon').textContent = '✓';
+    document.getElementById('mc-fb-text').textContent = '¡Correcto!';
+  } else {
+    fb.className = 'feedback-box wrong';
+    document.getElementById('mc-fb-icon').textContent = '✗';
+    document.getElementById('mc-fb-text').textContent = `La respuesta correcta es: "${item.correct}"`;
+  }
+  document.getElementById('mc-next-btn').style.display = '';
+  document.getElementById('mc-score').textContent = `✓ ${mcCorrect}`;
+}
+
+function nextMultiple() {
+  mcIndex++;
+  if (mcIndex >= mcItems.length) {
+    showResultMultiple();
+  } else {
+    renderMultiple();
+  }
+}
+
+function showResultMultiple() {
+  document.getElementById('mc-card').style.display = 'none';
+  const pct = Math.round((mcCorrect / mcItems.length) * 100);
+  document.getElementById('mc-res-correct').textContent = mcCorrect;
+  document.getElementById('mc-res-total').textContent = mcItems.length;
+  document.getElementById('mc-res-pct').textContent = pct + '%';
+  document.getElementById('mc-result-emoji').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '💪' : '📚';
+  document.getElementById('mc-result-title').textContent = pct >= 80 ? '¡Excelente!' : pct >= 50 ? '¡Bien hecho!' : 'Sigue practicando';
+  document.getElementById('mc-result').classList.add('show');
+}
+
+function resetMultiple() { initMultiple(); }
+
+// ==========================================
+// ESCRITURA LIBRE
+// ==========================================
+function buildLibreItems() {
+  const items = [];
+  const filteredT = getFilteredTenses();
+  for (const verb of shuffle(verbs)) {
+    const tense = filteredT[Math.floor(Math.random() * filteredT.length)];
+    items.push({ verb, tense });
+  }
+  return items.slice(0, 8);
+}
+
+function initLibre() {
+  lbItems = buildLibreItems();
+  lbIndex = 0;
+  lbCorrect = 0;
+  lbTotal = 0;
+  lbAnswered = false;
+  document.getElementById('lb-card').style.display = '';
+  document.getElementById('lb-result').classList.remove('show');
+  renderLibre();
+}
+
+function renderLibre() {
+  const item = lbItems[lbIndex];
+  const { verb, tense } = item;
+  const conjs = verbData[verb][tense];
+
+  document.getElementById('lb-tense-tag').textContent = tenseLabels[tense];
+  document.getElementById('lb-verb-display').textContent = verb + ' — ' + tenseLabels[tense];
+
+  document.getElementById('lb-tbody').innerHTML = pronouns.map((p, i) =>
+    `<tr>
+      <td class="pronoun-cell">${p}</td>
+      <td><input class="conj-input" id="lb-inp-${i}" data-idx="${i}" placeholder="…"
+        autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();focusNext(${i})}"></td>
+    </tr>`
+  ).join('');
+
+  const fb = document.getElementById('lb-feedback');
+  fb.className = 'feedback-box';
+  lbAnswered = false;
+  document.getElementById('lb-check-btn').style.display = '';
+  document.getElementById('lb-next-btn').style.display = 'none';
+
+  const pct = Math.round((lbIndex / lbItems.length) * 100);
+  document.getElementById('lb-progress-text').textContent = `Verbo ${lbIndex + 1} de ${lbItems.length}`;
+  document.getElementById('lb-progress-bar').style.width = pct + '%';
+  document.getElementById('lb-score').textContent = `✓ ${lbCorrect}`;
+
+  setTimeout(() => { const inp = document.getElementById('lb-inp-0'); if(inp) inp.focus(); }, 50);
+}
+
+function focusNext(idx) {
+  const next = document.getElementById(`lb-inp-${idx + 1}`);
+  if (next) next.focus();
+  else checkLibre();
+}
+
+function checkLibre() {
+  if (lbAnswered) return;
+  lbAnswered = true;
+  const item = lbItems[lbIndex];
+  const conjs = verbData[item.verb][item.tense];
+  let roundCorrect = 0;
+
+  pronouns.forEach((p, i) => {
+    const inp = document.getElementById(`lb-inp-${i}`);
+    if (!inp) return;
+    const correct = normalize(inp.value) === normalize(conjs[i]);
+    inp.disabled = true;
+    if (correct) {
+      inp.classList.add('correct');
+      roundCorrect++;
+    } else {
+      inp.classList.add('wrong');
+      inp.value = conjs[i];
+      inp.classList.add('correct-ans');
+    }
+  });
+
+  lbCorrect += roundCorrect;
+  lbTotal += 6;
+  addScore(roundCorrect >= 5);
+
+  const fb = document.getElementById('lb-feedback');
+  if (roundCorrect === 6) {
+    fb.className = 'feedback-box correct';
+    document.getElementById('lb-fb-icon').textContent = '✓';
+    document.getElementById('lb-fb-text').textContent = '¡Perfecto! Todas las formas correctas.';
+  } else {
+    fb.className = 'feedback-box wrong';
+    document.getElementById('lb-fb-icon').textContent = '✗';
+    document.getElementById('lb-fb-text').textContent = `${roundCorrect} de 6 correctas. Las incorrectas aparecen corregidas en verde.`;
+  }
+  document.getElementById('lb-check-btn').style.display = 'none';
+  document.getElementById('lb-next-btn').style.display = '';
+  document.getElementById('lb-score').textContent = `✓ ${lbCorrect}`;
+}
+
+function nextLibre() {
+  lbIndex++;
+  if (lbIndex >= lbItems.length) {
+    showResultLibre();
+  } else {
+    renderLibre();
+  }
+}
+
+function showResultLibre() {
+  document.getElementById('lb-card').style.display = 'none';
+  const pct = lbTotal > 0 ? Math.round((lbCorrect / lbTotal) * 100) : 0;
+  document.getElementById('lb-res-correct').textContent = lbCorrect;
+  document.getElementById('lb-res-total').textContent = lbTotal;
+  document.getElementById('lb-res-pct').textContent = pct + '%';
+  document.getElementById('lb-result-emoji').textContent = pct >= 80 ? '🎓' : pct >= 50 ? '💪' : '📚';
+  document.getElementById('lb-result-title').textContent = pct >= 80 ? '¡Fantástico dominio!' : pct >= 50 ? '¡Bien hecho!' : 'Sigue practicando';
+  document.getElementById('lb-result').classList.add('show');
+}
+
+function resetLibre() { initLibre(); }
+
+// ==========================================
+// INIT
+// ==========================================
+initFlashcards();
+</script>
+</body>
+</html>
