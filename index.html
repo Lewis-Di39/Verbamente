@@ -163,6 +163,14 @@
     opacity: 0.45;
     margin-bottom: 16px;
   }
+  .fc-translation {
+    font-size: 1rem;
+    color: var(--gold);
+    font-style: italic;
+    margin-bottom: 6px;
+    font-family: 'Georgia', serif;
+    opacity: 0.9;
+  }
   .fc-verb {
     font-family: 'Fraunces', serif;
     font-size: 3rem;
@@ -501,6 +509,7 @@
           <div class="fc-label">Verbo</div>
           <div class="fc-tense-badge" id="fc-tense-label">presente</div>
           <div class="fc-verb" id="fc-verb">hablar</div>
+          <div class="fc-translation" id="fc-translation">to speak</div>
           <div class="fc-context" id="fc-context">verbo regular -ar</div>
           <div class="fc-hint">Toca para ver la conjugación →</div>
         </div>
@@ -655,8 +664,9 @@
 const pronouns = ['yo','tú','él/ella','nosotros','ellos/ellas'];
 
 const verbData = {
-  // ── REGULARES -AR ──────────────────────────────
+  // ------------------------------------------------------
   hablar: {
+    en: 'to speak',
     type: 'regular -ar', context: 'regular -ar',
     presente:   ['hablo','hablas','habla','hablamos','hablan'],
     indefinido: ['hablé','hablaste','habló','hablamos','hablaron'],
@@ -666,6 +676,7 @@ const verbData = {
     subjuntivo: ['hable','hables','hable','hablemos','hablen'],
   },
   trabajar: {
+    en: 'to work',
     type: 'regular -ar', context: 'regular -ar',
     presente:   ['trabajo','trabajas','trabaja','trabajamos','trabajan'],
     indefinido: ['trabajé','trabajaste','trabajó','trabajamos','trabajaron'],
@@ -675,6 +686,7 @@ const verbData = {
     subjuntivo: ['trabaje','trabajes','trabaje','trabajemos','trabajen'],
   },
   llamar: {
+    en: 'to call',
     type: 'regular -ar', context: 'regular -ar',
     presente:   ['llamo','llamas','llama','llamamos','llaman'],
     indefinido: ['llamé','llamaste','llamó','llamamos','llamaron'],
@@ -684,6 +696,7 @@ const verbData = {
     subjuntivo: ['llame','llames','llame','llamemos','llamen'],
   },
   comprar: {
+    en: 'to buy',
     type: 'regular -ar', context: 'regular -ar',
     presente:   ['compro','compras','compra','compramos','compran'],
     indefinido: ['compré','compraste','compró','compramos','compraron'],
@@ -693,6 +706,7 @@ const verbData = {
     subjuntivo: ['compre','compres','compre','compremos','compren'],
   },
   escuchar: {
+    en: 'to listen',
     type: 'regular -ar', context: 'regular -ar',
     presente:   ['escucho','escuchas','escucha','escuchamos','escuchan'],
     indefinido: ['escuché','escuchaste','escuchó','escuchamos','escucharon'],
@@ -701,8 +715,9 @@ const verbData = {
     futuro:     ['escucharé','escucharás','escuchará','escucharemos','escucharán'],
     subjuntivo: ['escuche','escuches','escuche','escuchemos','escuchen'],
   },
-  // ── REGULARES -ER ──────────────────────────────
+  // ------------------------------------------------------
   comer: {
+    en: 'to eat',
     type: 'regular -er', context: 'regular -er',
     presente:   ['como','comes','come','comemos','comen'],
     indefinido: ['comí','comiste','comió','comimos','comieron'],
@@ -712,6 +727,7 @@ const verbData = {
     subjuntivo: ['coma','comas','coma','comamos','coman'],
   },
   beber: {
+    en: 'to drink',
     type: 'regular -er', context: 'regular -er',
     presente:   ['bebo','bebes','bebe','bebemos','beben'],
     indefinido: ['bebí','bebiste','bebió','bebimos','bebieron'],
@@ -721,6 +737,7 @@ const verbData = {
     subjuntivo: ['beba','bebas','beba','bebamos','beban'],
   },
   leer: {
+    en: 'to read',
     type: 'regular -er', context: 'regular -er',
     presente:   ['leo','lees','lee','leemos','leen'],
     indefinido: ['leí','leíste','leyó','leímos','leyeron'],
@@ -729,8 +746,9 @@ const verbData = {
     futuro:     ['leeré','leerás','leerá','leeremos','leerán'],
     subjuntivo: ['lea','leas','lea','leamos','lean'],
   },
-  // ── REGULARES -IR ──────────────────────────────
+  // ------------------------------------------------------
   vivir: {
+    en: 'to live',
     type: 'regular -ir', context: 'regular -ir',
     presente:   ['vivo','vives','vive','vivimos','viven'],
     indefinido: ['viví','viviste','vivió','vivimos','vivieron'],
@@ -740,6 +758,7 @@ const verbData = {
     subjuntivo: ['viva','vivas','viva','vivamos','vivan'],
   },
   escribir: {
+    en: 'to write',
     type: 'regular -ir', context: 'regular -ir',
     presente:   ['escribo','escribes','escribe','escribimos','escriben'],
     indefinido: ['escribí','escribiste','escribió','escribimos','escribieron'],
@@ -748,8 +767,9 @@ const verbData = {
     futuro:     ['escribiré','escribirás','escribirá','escribiremos','escribirán'],
     subjuntivo: ['escriba','escribas','escriba','escribamos','escriban'],
   },
-  // ── IRREGULARES MUY COMUNES ────────────────────
+  // ------------------------------------------------------
   ser: {
+    en: 'to be (permanent)',
     type: 'irregular', context: 'irregular — muy frecuente',
     presente:   ['soy','eres','es','somos','son'],
     indefinido: ['fui','fuiste','fue','fuimos','fueron'],
@@ -759,6 +779,7 @@ const verbData = {
     subjuntivo: ['sea','seas','sea','seamos','sean'],
   },
   estar: {
+    en: 'to be (temporary)',
     type: 'irregular', context: 'irregular — muy frecuente',
     presente:   ['estoy','estás','está','estamos','están'],
     indefinido: ['estuve','estuviste','estuvo','estuvimos','estuvieron'],
@@ -768,6 +789,7 @@ const verbData = {
     subjuntivo: ['esté','estés','esté','estemos','estén'],
   },
   tener: {
+    en: 'to have',
     type: 'irregular', context: 'irregular — go-go / futuro sincopado',
     presente:   ['tengo','tienes','tiene','tenemos','tienen'],
     indefinido: ['tuve','tuviste','tuvo','tuvimos','tuvieron'],
@@ -777,6 +799,7 @@ const verbData = {
     subjuntivo: ['tenga','tengas','tenga','tengamos','tengan'],
   },
   haber: {
+    en: 'to have (auxiliary)',
     type: 'irregular', context: 'irregular — auxiliar del perfecto',
     presente:   ['he','has','ha','hemos','han'],
     indefinido: ['hube','hubiste','hubo','hubimos','hubieron'],
@@ -786,6 +809,7 @@ const verbData = {
     subjuntivo: ['haya','hayas','haya','hayamos','hayan'],
   },
   ir: {
+    en: 'to go',
     type: 'irregular', context: 'irregular — muy irregular',
     presente:   ['voy','vas','va','vamos','van'],
     indefinido: ['fui','fuiste','fue','fuimos','fueron'],
@@ -795,6 +819,7 @@ const verbData = {
     subjuntivo: ['vaya','vayas','vaya','vayamos','vayan'],
   },
   hacer: {
+    en: 'to do / to make',
     type: 'irregular', context: 'irregular — go-go / futuro sincopado',
     presente:   ['hago','haces','hace','hacemos','hacen'],
     indefinido: ['hice','hiciste','hizo','hicimos','hicieron'],
@@ -804,6 +829,7 @@ const verbData = {
     subjuntivo: ['haga','hagas','haga','hagamos','hagan'],
   },
   poder: {
+    en: 'to be able to / can',
     type: 'irregular o→ue', context: 'irregular — diptongo o→ue',
     presente:   ['puedo','puedes','puede','podemos','pueden'],
     indefinido: ['pude','pudiste','pudo','pudimos','pudieron'],
@@ -813,6 +839,7 @@ const verbData = {
     subjuntivo: ['pueda','puedas','pueda','podamos','puedan'],
   },
   querer: {
+    en: 'to want / to love',
     type: 'irregular e→ie', context: 'irregular — diptongo e→ie',
     presente:   ['quiero','quieres','quiere','queremos','quieren'],
     indefinido: ['quise','quisiste','quiso','quisimos','quisieron'],
@@ -822,6 +849,7 @@ const verbData = {
     subjuntivo: ['quiera','quieras','quiera','queramos','quieran'],
   },
   saber: {
+    en: 'to know',
     type: 'irregular', context: 'irregular — 1ª persona y futuro sincopado',
     presente:   ['sé','sabes','sabe','sabemos','saben'],
     indefinido: ['supe','supiste','supo','supimos','supieron'],
@@ -831,6 +859,7 @@ const verbData = {
     subjuntivo: ['sepa','sepas','sepa','sepamos','sepan'],
   },
   venir: {
+    en: 'to come',
     type: 'irregular', context: 'irregular — go-go / futuro sincopado',
     presente:   ['vengo','vienes','viene','venimos','vienen'],
     indefinido: ['vine','viniste','vino','vinimos','vinieron'],
@@ -840,6 +869,7 @@ const verbData = {
     subjuntivo: ['venga','vengas','venga','vengamos','vengan'],
   },
   decir: {
+    en: 'to say / to tell',
     type: 'irregular', context: 'irregular — go-go / e→i / futuro sincopado',
     presente:   ['digo','dices','dice','decimos','dicen'],
     indefinido: ['dije','dijiste','dijo','dijimos','dijeron'],
@@ -849,6 +879,7 @@ const verbData = {
     subjuntivo: ['diga','digas','diga','digamos','digan'],
   },
   dar: {
+    en: 'to give',
     type: 'irregular', context: 'irregular — 1ª persona y pretérito',
     presente:   ['doy','das','da','damos','dan'],
     indefinido: ['di','diste','dio','dimos','dieron'],
@@ -858,6 +889,7 @@ const verbData = {
     subjuntivo: ['dé','des','dé','demos','den'],
   },
   ver: {
+    en: 'to see',
     type: 'irregular', context: 'irregular — imperfecto y participio',
     presente:   ['veo','ves','ve','vemos','ven'],
     indefinido: ['vi','viste','vio','vimos','vieron'],
@@ -867,6 +899,7 @@ const verbData = {
     subjuntivo: ['vea','veas','vea','veamos','vean'],
   },
   poner: {
+    en: 'to put / to place',
     type: 'irregular', context: 'irregular — go-go / futuro sincopado',
     presente:   ['pongo','pones','pone','ponemos','ponen'],
     indefinido: ['puse','pusiste','puso','pusimos','pusieron'],
@@ -876,6 +909,7 @@ const verbData = {
     subjuntivo: ['ponga','pongas','ponga','pongamos','pongan'],
   },
   salir: {
+    en: 'to go out / to leave',
     type: 'irregular', context: 'irregular — go-go / futuro sincopado',
     presente:   ['salgo','sales','sale','salimos','salen'],
     indefinido: ['salí','saliste','salió','salimos','salieron'],
@@ -884,8 +918,9 @@ const verbData = {
     futuro:     ['saldré','saldrás','saldrá','saldremos','saldrán'],
     subjuntivo: ['salga','salgas','salga','salgamos','salgan'],
   },
-  // ── CON CAMBIO VOCÁLICO ────────────────────────
+  // ------------------------------------------------------
   dormir: {
+    en: 'to sleep',
     type: 'irregular o→ue/u', context: 'irregular — cambio vocálico o→ue',
     presente:   ['duermo','duermes','duerme','dormimos','duermen'],
     indefinido: ['dormí','dormiste','durmió','dormimos','durmieron'],
@@ -895,6 +930,7 @@ const verbData = {
     subjuntivo: ['duerma','duermas','duerma','durmamos','duerman'],
   },
   pedir: {
+    en: 'to ask for / to order',
     type: 'irregular e→i', context: 'irregular — cambio vocálico e→i',
     presente:   ['pido','pides','pide','pedimos','piden'],
     indefinido: ['pedí','pediste','pidió','pedimos','pidieron'],
@@ -904,6 +940,7 @@ const verbData = {
     subjuntivo: ['pida','pidas','pida','pidamos','pidan'],
   },
   jugar: {
+    en: 'to play',
     type: 'irregular u→ue', context: 'irregular — diptongo u→ue',
     presente:   ['juego','juegas','juega','jugamos','juegan'],
     indefinido: ['jugué','jugaste','jugó','jugamos','jugaron'],
@@ -912,8 +949,9 @@ const verbData = {
     futuro:     ['jugaré','jugarás','jugará','jugaremos','jugarán'],
     subjuntivo: ['juegue','juegues','juegue','juguemos','jueguen'],
   },
-  // ── REFLEXIVOS COMUNES ─────────────────────────
+  // ------------------------------------------------------
   levantarse: {
+    en: 'to get up',
     type: 'regular reflexivo', context: 'regular -ar reflexivo',
     presente:   ['me levanto','te levantas','se levanta','nos levantamos','se levantan'],
     indefinido: ['me levanté','te levantaste','se levantó','nos levantamos','se levantaron'],
@@ -936,15 +974,15 @@ const tenseLabels = {
 const tenses = ['presente','indefinido','imperfecto','perfecto','subjuntivo'];
 const verbs = Object.keys(verbData);
 
-// ──────────────────────────────────────────────────────────
+// ------------------------------------------------------
 // FRASES PARA "COMPLETAR" Y "OPCIÓN MÚLTIPLE"
 // Formato: [frase con ___, verbo, índice pronombre, tiempo, respuesta]
-// ──────────────────────────────────────────────────────────
+// ------------------------------------------------------
 const sentences = [
   // PRESENTE
   ['Cada mañana yo ___ a las siete.', 'levantarse', 0, 'presente', 'me levanto'],
   ['Ella ___ muy bien el inglés.', 'hablar', 2, 'presente', 'habla'],
-  ['¿A qué hora ___ normalmente? (tú)', 'levantarse', 1, 'presente', 'te levantas'],
+  ['¿A qué hora ___ tú normalmente?', 'levantarse', 1, 'presente', 'te levantas'],
   ['Ellos ___ en una empresa tecnológica.', 'trabajar', 5, 'presente', 'trabajan'],
   ['Yo no ___ dónde están mis llaves.', 'saber', 0, 'presente', 'sé'],
   ['Nosotros siempre ___ la radio en el coche.', 'escuchar', 3, 'presente', 'escuchamos'],
@@ -959,8 +997,8 @@ const sentences = [
   // INDEFINIDO
   ['Ayer ___ una película muy buena.', 'ver', 3, 'indefinido', 'vimos'],
   ['El año pasado ella ___ en París.', 'vivir', 2, 'indefinido', 'vivió'],
-  ['¿(Tú) ___ con el jefe ayer?', 'hablar', 1, 'indefinido', 'hablaste'],
-  ['Anoche (yo) ___ muy tarde.', 'salir', 0, 'indefinido', 'salí'],
+  ['¿Tú ___ con el jefe ayer?', 'hablar', 1, 'indefinido', 'hablaste'],
+  ['Anoche yo ___ muy tarde.', 'salir', 0, 'indefinido', 'salí'],
   ['Ellos ___ una pizza entera.', 'comer', 5, 'indefinido', 'comieron'],
   ['¿Cuándo ___ tú a Madrid?', 'ir', 1, 'indefinido', 'fuiste'],
   ['Ella me ___ un regalo precioso.', 'dar', 2, 'indefinido', 'dio'],
@@ -1007,15 +1045,14 @@ const sentences = [
   ['Ellas ___ los resultados mañana.', 'dar', 5, 'futuro', 'darán'],
 
   // SUBJUNTIVO
-  ['Quiero que (tú) ___ la verdad.', 'decir', 1, 'subjuntivo', 'digas'],
-  ['Espero que a ella ___ bien el examen.', 'irse', 2, 'subjuntivo', 'le vaya'],
-  ['Ojalá (nosotros) ___ ganar el partido.', 'poder', 3, 'subjuntivo', 'podamos'],
+  ['Quiero que tú ___ la verdad.', 'decir', 1, 'subjuntivo', 'digas'],
+  ['Espero que ella ___ bien el examen.', 'hacer', 2, 'subjuntivo', 'haga'],
+  ['Ojalá nosotros ___ ganar.', 'poder', 3, 'subjuntivo', 'podamos'],
   ['No creo que ellos ___ la solución.', 'saber', 5, 'subjuntivo', 'sepan'],
-  ['Quiero que (tú) ___ más tranquilo.', 'estar', 1, 'subjuntivo', 'estés'],
-  ['Es necesario que (yo) ___ más.', 'dormir', 0, 'subjuntivo', 'duerma'],
-  ['Ojalá (él) ___ pronto.', 'venir', 2, 'subjuntivo', 'venga'],
-  ['Espero que (ellos) ___ bien.', 'estar', 5, 'subjuntivo', 'estén'],
-  ['Que (ustedes) ___ buen viaje.', 'tener', 5, 'subjuntivo', 'tengan'],
+  ['Quiero que tú ___ más tranquilo.', 'estar', 1, 'subjuntivo', 'estés'],
+  ['Es necesario que yo ___ más.', 'dormir', 0, 'subjuntivo', 'duerma'],
+  ['Ojalá él ___ pronto.', 'venir', 2, 'subjuntivo', 'venga'],
+  ['Espero que ellos ___ bien.', 'estar', 5, 'subjuntivo', 'estén'],
 ];
 
 // ==========================================
@@ -1125,6 +1162,9 @@ function renderFlashcard() {
   const conjs = data[card.tense];
   
   document.getElementById('fc-verb').textContent = card.verb;
+  const trans = verbData[card.verb] && verbData[card.verb].en ? verbData[card.verb].en : '';
+  const transEl = document.getElementById('fc-translation');
+  if (transEl) transEl.textContent = trans;
   document.getElementById('fc-context').textContent = data.context;
   document.getElementById('fc-tense-label').textContent = tenseLabels[card.tense];
   document.getElementById('fc-tense-label').textContent = tenseLabels[card.tense];
@@ -1146,6 +1186,8 @@ function renderFlashcard() {
   document.getElementById('fc-progress-bar').style.width = pct + '%';
   document.getElementById('fc-streak').textContent = `🔥 ${fcStreak}`;
 }
+
+
 
 function flipCard() {
   const fc = document.getElementById('flashcard');
@@ -1506,6 +1548,77 @@ function resetLibre() { initLibre(); }
 // INIT
 // ==========================================
 initFlashcards();
+
+// ------------------------------------------------------
+// CUADERNO DEL PROFESOR - Tracking
+// Pega aquí la URL de tu Google Apps Script
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwu2IPmFNoivHhTUbinkpKx0dPDQU9yCAcgAmi8QvPAcxyguwk4LWD1zWzaHGml4KoxRA/exe';
+
+let studentName = '';
+
+function askStudentName(onReady) {
+  // Create name overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'name-overlay';
+  overlay.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,0.82);
+    display:flex;align-items:center;justify-content:center;
+    z-index:9999;font-family:inherit;
+  `;
+  overlay.innerHTML = `
+    <div style="background:#fdfaf5;border-radius:16px;padding:36px 32px;
+      max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
+      <div style="font-size:2.4rem;margin-bottom:12px">✏️</div>
+      <div style="font-family:serif;font-size:1.4rem;font-weight:700;
+        color:#1a1612;margin-bottom:6px">¡Bienvenido/a!</div>
+      <div style="font-size:0.85rem;color:#78716c;margin-bottom:20px;line-height:1.5">
+        Escribe tu nombre para que tu profe pueda ver tu progreso
+      </div>
+      <input id="name-input" type="text" placeholder="Tu nombre..."
+        style="width:100%;padding:10px 14px;border:1.5px solid #d4ccc0;
+          border-radius:8px;font-size:1rem;outline:none;margin-bottom:14px;
+          font-family:inherit;background:#f5f0e8;color:#1a1612"
+        onkeydown="if(event.key==='Enter')document.getElementById('name-ok').click()">
+      <button id="name-ok" onclick="confirmName()"
+        style="width:100%;background:#1a1612;color:#fff;border:none;
+          border-radius:8px;padding:11px;font-size:0.9rem;font-weight:600;
+          cursor:pointer;font-family:inherit">
+        Empezar →
+      </button>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('name-input').focus(), 100);
+  window._onNameReady = onReady;
+}
+
+function confirmName() {
+  const val = document.getElementById('name-input').value.trim();
+  if (!val) { document.getElementById('name-input').style.borderColor='#9b2226'; return; }
+  studentName = val;
+  document.getElementById('name-overlay').remove();
+  if (window._onNameReady) window._onNameReady();
+}
+
+function sendSession(app, situation, correct, total, duration, mistakes) {
+  if (!SCRIPT_URL || SCRIPT_URL === 'PEGA_AQUI_TU_URL') return;
+  const payload = {
+    student:   studentName || 'Anónimo',
+    app:       app,
+    situation: situation,
+    correct:   correct,
+    total:     total,
+    duration:  duration,
+    mistakes:  mistakes || [],
+  };
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode:   'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  }).catch(() => {}); // silently fail if offline
+}
+
+askStudentName(() => {});
 </script>
 </body>
 </html>
