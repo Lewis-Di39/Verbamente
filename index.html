@@ -661,7 +661,7 @@
 // ==========================================
 // DATA
 // ==========================================
-const pronouns = ['yo','tú','él/ella','nosotros','ellos/ellas'];
+const pronouns = ['yo','tú','él/ella/usted','nosotros','ellos/ellas/ustedes'];
 
 const verbData = {
   // ------------------------------------------------------
@@ -790,7 +790,7 @@ const verbData = {
   },
   tener: {
     en: 'to have',
-    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    type: 'irregular', context: 'irregular — presente de indicativc -go/ presente de subjuntivo -ga / futuro',
     presente:   ['tengo','tienes','tiene','tenemos','tienen'],
     indefinido: ['tuve','tuviste','tuvo','tuvimos','tuvieron'],
     imperfecto: ['tenía','tenías','tenía','teníamos','tenían'],
@@ -820,7 +820,7 @@ const verbData = {
   },
   hacer: {
     en: 'to do / to make',
-    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    type: 'irregular', context: 'irregular — presente de indicativc -go/ presente de subjuntivo -ga / futuro',
     presente:   ['hago','haces','hace','hacemos','hacen'],
     indefinido: ['hice','hiciste','hizo','hicimos','hicieron'],
     imperfecto: ['hacía','hacías','hacía','hacíamos','hacían'],
@@ -850,7 +850,7 @@ const verbData = {
   },
   saber: {
     en: 'to know',
-    type: 'irregular', context: 'irregular — 1ª persona y futuro sincopado',
+    type: 'irregular', context: 'irregular — 1ª persona y futuro',
     presente:   ['sé','sabes','sabe','sabemos','saben'],
     indefinido: ['supe','supiste','supo','supimos','supieron'],
     imperfecto: ['sabía','sabías','sabía','sabíamos','sabían'],
@@ -860,7 +860,7 @@ const verbData = {
   },
   venir: {
     en: 'to come',
-    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    type: 'irregular', context: 'irregular — presente de indicativc -go/ presente de subjuntivo -ga / futuro',
     presente:   ['vengo','vienes','viene','venimos','vienen'],
     indefinido: ['vine','viniste','vino','vinimos','vinieron'],
     imperfecto: ['venía','venías','venía','veníamos','venían'],
@@ -870,7 +870,7 @@ const verbData = {
   },
   decir: {
     en: 'to say / to tell',
-    type: 'irregular', context: 'irregular — go-go / e→i / futuro sincopado',
+    type: 'irregular', context: 'irregular — go-ga / e→i / futuro',
     presente:   ['digo','dices','dice','decimos','dicen'],
     indefinido: ['dije','dijiste','dijo','dijimos','dijeron'],
     imperfecto: ['decía','decías','decía','decíamos','decían'],
@@ -900,7 +900,7 @@ const verbData = {
   },
   poner: {
     en: 'to put / to place',
-    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    type: 'irregular', context: 'irregular — presente de indicativc -go/ presente de subjuntivo -ga / futuro',
     presente:   ['pongo','pones','pone','ponemos','ponen'],
     indefinido: ['puse','pusiste','puso','pusimos','pusieron'],
     imperfecto: ['ponía','ponías','ponía','poníamos','ponían'],
@@ -910,7 +910,7 @@ const verbData = {
   },
   salir: {
     en: 'to go out / to leave',
-    type: 'irregular', context: 'irregular — go-go / futuro sincopado',
+    type: 'irregular', context: 'irregular — presente de indicativc -go/ presente de subjuntivo -ga / futuro',
     presente:   ['salgo','sales','sale','salimos','salen'],
     indefinido: ['salí','saliste','salió','salimos','salieron'],
     imperfecto: ['salía','salías','salía','salíamos','salían'],
@@ -966,7 +966,7 @@ const tenseLabels = {
   presente: 'Presente indicativo',
   indefinido: 'Pretérito indefinido',
   imperfecto: 'Pretérito imperfecto',
-  perfecto: 'Pretérito perfecto compuesto',
+  perfecto: 'Pretérito perfecto',
   futuro: 'Futuro simple',
   subjuntivo: 'Presente de subjuntivo',
 };
@@ -980,79 +980,79 @@ const verbs = Object.keys(verbData);
 // ------------------------------------------------------
 const sentences = [
   // PRESENTE
-  ['Cada mañana yo ___ a las siete.', 'levantarse', 0, 'presente', 'me levanto'],
-  ['Ella ___ muy bien el inglés.', 'hablar', 2, 'presente', 'habla'],
-  ['¿A qué hora ___ tú normalmente?', 'levantarse', 1, 'presente', 'te levantas'],
-  ['Ellos ___ en una empresa tecnológica.', 'trabajar', 5, 'presente', 'trabajan'],
-  ['Yo no ___ dónde están mis llaves.', 'saber', 0, 'presente', 'sé'],
-  ['Nosotros siempre ___ la radio en el coche.', 'escuchar', 3, 'presente', 'escuchamos'],
-  ['Él ___ muy cansado hoy.', 'estar', 2, 'presente', 'está'],
-  ['Yo ___ que estudiar más.', 'tener', 0, 'presente', 'tengo'],
-  ['Tú siempre ___ lo que piensas.', 'decir', 1, 'presente', 'dices'],
+  ['Cada mañana (yo) ___ a las siete.', 'levantarse', 0, 'presente', 'me levanto'],
+  ['(Ella) ___ muy bien el inglés.', 'hablar', 2, 'presente', 'habla'],
+  ['¿A qué hora ___ (tú) normalmente?', 'levantarse', 1, 'presente', 'te levantas'],
+  ['(Ellos) ___ en una empresa tecnológica.', 'trabajar', 5, 'presente', 'trabajan'],
+  ['(Yo) no ___ dónde están mis llaves.', 'saber', 0, 'presente', 'sé'],
+  ['(Nosotros) siempre ___ la radio en el coche.', 'escuchar', 3, 'presente', 'escuchamos'],
+  ['(Él) ___ muy cansado hoy.', 'estar', 2, 'presente', 'está'],
+  ['(Yo) ___ que estudiar más.', 'tener', 0, 'presente', 'tengo'],
+  ['(Tú) siempre ___ lo que piensas.', 'decir', 1, 'presente', 'dices'],
   ['Mi madre ___ novelas históricas.', 'leer', 2, 'presente', 'lee'],
-  ['Nosotros ___ en el centro de la ciudad.', 'vivir', 3, 'presente', 'vivimos'],
-  ['Yo ___ al gimnasio tres veces por semana.', 'ir', 0, 'presente', 'voy'],
-  ['Él ___ la comida en la mesa.', 'poner', 2, 'presente', 'pone'],
+  ['(Nosotros) ___ en el centro de la ciudad.', 'vivir', 3, 'presente', 'vivimos'],
+  ['(Yo) ___ al gimnasio tres veces por semana.', 'ir', 0, 'presente', 'voy'],
+  ['(Él) ___ la comida en la mesa.', 'poner', 2, 'presente', 'pone'],
 
   // INDEFINIDO
-  ['Ayer ___ una película muy buena.', 'ver', 3, 'indefinido', 'vimos'],
-  ['El año pasado ella ___ en París.', 'vivir', 2, 'indefinido', 'vivió'],
-  ['¿Tú ___ con el jefe ayer?', 'hablar', 1, 'indefinido', 'hablaste'],
-  ['Anoche yo ___ muy tarde.', 'salir', 0, 'indefinido', 'salí'],
-  ['Ellos ___ una pizza entera.', 'comer', 5, 'indefinido', 'comieron'],
-  ['¿Cuándo ___ tú a Madrid?', 'ir', 1, 'indefinido', 'fuiste'],
-  ['Ella me ___ un regalo precioso.', 'dar', 2, 'indefinido', 'dio'],
-  ['Yo ___ la verdad en ese momento.', 'decir', 0, 'indefinido', 'dije'],
-  ['Nosotros ___ el problema juntos.', 'hablar', 3, 'indefinido', 'hablamos'],
-  ['Él ___ muy tarde anoche.', 'venir', 2, 'indefinido', 'vino'],
-  ['Yo ___ las llaves en el bolso.', 'poner', 0, 'indefinido', 'puse'],
-  ['Ellos ___ todo lo necesario.', 'saber', 5, 'indefinido', 'supieron'],
-  ['Nosotros ___ en ese hotel la semana pasada.', 'estar', 3, 'indefinido', 'estuvimos'],
-  ['Tú ___ muy bien en la reunión.', 'hablar', 1, 'indefinido', 'hablaste'],
+  ['Ayer (nosotros) ___ una película muy buena.', 'ver', 3, 'indefinido', 'vimos'],
+  ['El año pasado Ana ___ en París.', 'vivir', 2, 'indefinido', 'vivió'],
+  ['¿(Tú) ___ con el jefe ayer?', 'hablar', 1, 'indefinido', 'hablaste'],
+  ['Anoche (yo) ___ muy tarde.', 'salir', 0, 'indefinido', 'salí'],
+  ['(Ellos) ___ una pizza entera ayer.', 'comer', 5, 'indefinido', 'comieron'],
+  ['¿Cuándo ___ (tú) a Madrid?', 'ir', 1, 'indefinido', 'fuiste'],
+  ['(Ella) me ___ un regalo precioso.', 'dar', 2, 'indefinido', 'dio'],
+  ['(Yo) ___ la verdad en ese momento.', 'decir', 0, 'indefinido', 'dije'],
+  ['(Nosotros) ___ del problema juntos.', 'hablar', 3, 'indefinido', 'hablamos'],
+  ['(Él) ___ muy tarde anoche.', 'venir', 2, 'indefinido', 'vino'],
+  ['(Yo) ___ las llaves en mi mochila.', 'poner', 0, 'indefinido', 'puse'],
+  ['(Ellos) ___ las respuestas del exámen.', 'saber', 5, 'indefinido', 'supieron'],
+  ['(Nosotros) ___ en ese hotel la semana pasada.', 'estar', 3, 'indefinido', 'estuvimos'],
+  ['(Tú) ___ muy bien en la reunión.', 'hablar', 1, 'indefinido', 'hablaste'],
 
   // IMPERFECTO
-  ['De niño, yo ___ al fútbol todos los días.', 'jugar', 0, 'imperfecto', 'jugaba'],
+  ['De niño, ___ al fútbol todos los días.', 'jugar', 0, 'imperfecto', 'jugaba'],
   ['Cuando éramos jóvenes, ___ mucho en verano.', 'salir', 3, 'imperfecto', 'salíamos'],
-  ['Antes, ella siempre ___ música clásica.', 'escuchar', 2, 'imperfecto', 'escuchaba'],
-  ['De pequeño, él ___ en el campo.', 'vivir', 2, 'imperfecto', 'vivía'],
+  ['Antes, Luis siempre ___ música clásica.', 'escuchar', 2, 'imperfecto', 'escuchaba'],
+  ['De pequeño, Carlos ___ en el campo.', 'vivir', 2, 'imperfecto', 'vivía'],
   ['Mis padres ___ en esa fábrica.', 'trabajar', 5, 'imperfecto', 'trabajaban'],
-  ['Cuando llegué, ellos ___ la televisión.', 'ver', 5, 'imperfecto', 'veían'],
-  ['Antes yo ___ ocho horas cada noche.', 'dormir', 0, 'imperfecto', 'dormía'],
-  ['Ella ___ muy tímida de joven.', 'ser', 2, 'imperfecto', 'era'],
+  ['Cuando llegué, mis amigos ___ la televisión.', 'ver', 5, 'imperfecto', 'veían'],
+  ['Antes (yo) ___ ocho horas cada noche.', 'dormir', 0, 'imperfecto', 'dormía'],
+  ['(Ella) ___ muy tímida de joven.', 'ser', 2, 'imperfecto', 'era'],
   ['Nosotros ___ muy bien cuando vivíamos allí.', 'estar', 3, 'imperfecto', 'estábamos'],
-  ['¿Tú ___ mucho cuando eras pequeño?', 'leer', 1, 'imperfecto', 'leías'],
+  ['¿(Tú) ___ mucho cuando eras pequeño?', 'leer', 1, 'imperfecto', 'leías'],
 
   // PERFECTO
-  ['Esta mañana yo ___ dos cafés.', 'beber', 0, 'perfecto', 'he bebido'],
-  ['¿___ tú alguna vez en Tokio?', 'estar', 1, 'perfecto', 'has estado'],
-  ['Ella ___ tres novelas este año.', 'leer', 2, 'perfecto', 'ha leído'],
-  ['Nosotros ___ el informe esta tarde.', 'hacer', 3, 'perfecto', 'hemos hecho'],
-  ['Ellos ya ___ el apartamento.', 'comprar', 5, 'perfecto', 'han comprado'],
-  ['Yo nunca ___ paella.', 'comer', 0, 'perfecto', 'he comido'],
-  ['Él me ___ esta mañana.', 'llamar', 2, 'perfecto', 'ha llamado'],
-  ['Tú ___ muy tarde hoy.', 'venir', 1, 'perfecto', 'has venido'],
-  ['Nosotros ___ todo el día.', 'trabajar', 3, 'perfecto', 'hemos trabajado'],
+  ['Esta mañana (yo) ___ dos cafés.', 'beber', 0, 'perfecto', 'he bebido'],
+  ['¿___ (tú) alguna vez en Tokio?', 'estar', 1, 'perfecto', 'has estado'],
+  ['Mi amiga ___ tres novelas este año.', 'leer', 2, 'perfecto', 'ha leído'],
+  ['(Nosotros) ___ el informe esta tarde.', 'hacer', 3, 'perfecto', 'hemos hecho'],
+  ['(Ellos) ya ___ el apartamento.', 'comprar', 5, 'perfecto', 'han comprado'],
+  ['(Yo) nunca ___ paella.', 'comer', 0, 'perfecto', 'he comido'],
+  ['Mi compañero de trabajo me ___ esta mañana.', 'llamar', 2, 'perfecto', 'ha llamado'],
+  ['(Tú) ___ muy tarde del trabajo hoy.', 'venir', 1, 'perfecto', 'has venido'],
+  ['(Nosotros) ___ todo el día.', 'trabajar', 3, 'perfecto', 'hemos trabajado'],
 
   // FUTURO
-  ['Mañana yo ___ con mis amigos.', 'hablar', 0, 'futuro', 'hablaré'],
-  ['El próximo año ella ___ en Londres.', 'vivir', 2, 'futuro', 'vivirá'],
-  ['¿Tú ___ a la fiesta el sábado?', 'venir', 1, 'futuro', 'vendrás'],
-  ['Ellos ___ los billetes la semana que viene.', 'comprar', 5, 'futuro', 'comprarán'],
-  ['Nosotros ___ una reunión mañana.', 'tener', 3, 'futuro', 'tendremos'],
-  ['Yo ___ todo lo posible para ayudaros.', 'hacer', 0, 'futuro', 'haré'],
-  ['Él ___ la verdad tarde o temprano.', 'saber', 2, 'futuro', 'sabrá'],
-  ['Tú ___ muy feliz en tu nuevo trabajo.', 'estar', 1, 'futuro', 'estarás'],
-  ['Ellas ___ los resultados mañana.', 'dar', 5, 'futuro', 'darán'],
+  ['Mañana (yo) ___ con mis amigos.', 'hablar', 0, 'futuro', 'hablaré'],
+  ['El próximo año Anita ___ en Londres.', 'vivir', 2, 'futuro', 'vivirá'],
+  ['¿(Tú) ___ a la fiesta el sábado?', 'venir', 1, 'futuro', 'vendrás'],
+  ['(Ustedes) ___ los boletos del su viaje la semana que viene.', 'comprar', 5, 'futuro', 'comprarán'],
+  ['(Nosotros) ___ una reunión mañana.', 'tener', 3, 'futuro', 'tendremos'],
+  ['(Yo) ___ todo lo posible para ayudaros.', 'hacer', 0, 'futuro', 'haré'],
+  ['(Él) ___ la verdad tarde o temprano.', 'saber', 2, 'futuro', 'sabrá'],
+  ['(Tú) ___ muy feliz en tu nuevo trabajo.', 'estar', 1, 'futuro', 'estarás'],
+  ['(Ellas) ___ los resultados mañana.', 'dar', 5, 'futuro', 'darán'],
 
   // SUBJUNTIVO
-  ['Quiero que tú ___ la verdad.', 'decir', 1, 'subjuntivo', 'digas'],
-  ['Espero que ella ___ bien el examen.', 'hacer', 2, 'subjuntivo', 'haga'],
-  ['Ojalá nosotros ___ ganar.', 'poder', 3, 'subjuntivo', 'podamos'],
-  ['No creo que ellos ___ la solución.', 'saber', 5, 'subjuntivo', 'sepan'],
-  ['Quiero que tú ___ más tranquilo.', 'estar', 1, 'subjuntivo', 'estés'],
-  ['Es necesario que yo ___ más.', 'dormir', 0, 'subjuntivo', 'duerma'],
-  ['Ojalá él ___ pronto.', 'venir', 2, 'subjuntivo', 'venga'],
-  ['Espero que ellos ___ bien.', 'estar', 5, 'subjuntivo', 'estén'],
+  ['Quiero que me (tú) ___ la verdad.', 'decir', 1, 'subjuntivo', 'digas'],
+  ['Espero que María ___ bien el examen.', 'hacer', 2, 'subjuntivo', 'haga'],
+  ['Ojalá (nosotros) ___ ganar el partido de la próxima semana.', 'poder', 3, 'subjuntivo', 'podamos'],
+  ['No creo que (ustedes) ___ la solución.', 'saber', 5, 'subjuntivo', 'sepan'],
+  ['Quiero que (tú) ___ más tranquilo. Todo estará bien.', 'estar', 1, 'subjuntivo', 'estés'],
+  ['Es necesario que (yo) ___ más temprano para no tener sueño en las mañanas.', 'dormir', 0, 'subjuntivo', 'duerma'],
+  ['Ojalá Enrique ___ pronto.', 'venir', 2, 'subjuntivo', 'venga'],
+  ['Espero que (ellos) ___ bien.', 'estar', 5, 'subjuntivo', 'estén'],
 ];
 
 // ==========================================
@@ -1552,52 +1552,9 @@ initFlashcards();
 // ------------------------------------------------------
 // CUADERNO DEL PROFESOR - Tracking
 // Pega aquí la URL de tu Google Apps Script
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwu2IPmFNoivHhTUbinkpKx0dPDQU9yCAcgAmi8QvPAcxyguwk4LWD1zWzaHGml4KoxRA/exe';
+const SCRIPT_URL = 'PEGA_AQUI_TU_URL';
 
-let studentName = '';
-
-function askStudentName(onReady) {
-  // Create name overlay
-  const overlay = document.createElement('div');
-  overlay.id = 'name-overlay';
-  overlay.style.cssText = `
-    position:fixed;inset:0;background:rgba(0,0,0,0.82);
-    display:flex;align-items:center;justify-content:center;
-    z-index:9999;font-family:inherit;
-  `;
-  overlay.innerHTML = `
-    <div style="background:#fdfaf5;border-radius:16px;padding:36px 32px;
-      max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
-      <div style="font-size:2.4rem;margin-bottom:12px">✏️</div>
-      <div style="font-family:serif;font-size:1.4rem;font-weight:700;
-        color:#1a1612;margin-bottom:6px">¡Bienvenido/a!</div>
-      <div style="font-size:0.85rem;color:#78716c;margin-bottom:20px;line-height:1.5">
-        Escribe tu nombre para que tu profe pueda ver tu progreso
-      </div>
-      <input id="name-input" type="text" placeholder="Tu nombre..."
-        style="width:100%;padding:10px 14px;border:1.5px solid #d4ccc0;
-          border-radius:8px;font-size:1rem;outline:none;margin-bottom:14px;
-          font-family:inherit;background:#f5f0e8;color:#1a1612"
-        onkeydown="if(event.key==='Enter')document.getElementById('name-ok').click()">
-      <button id="name-ok" onclick="confirmName()"
-        style="width:100%;background:#1a1612;color:#fff;border:none;
-          border-radius:8px;padding:11px;font-size:0.9rem;font-weight:600;
-          cursor:pointer;font-family:inherit">
-        Empezar →
-      </button>
-    </div>`;
-  document.body.appendChild(overlay);
-  setTimeout(() => document.getElementById('name-input').focus(), 100);
-  window._onNameReady = onReady;
-}
-
-function confirmName() {
-  const val = document.getElementById('name-input').value.trim();
-  if (!val) { document.getElementById('name-input').style.borderColor='#9b2226'; return; }
-  studentName = val;
-  document.getElementById('name-overlay').remove();
-  if (window._onNameReady) window._onNameReady();
-}
+let studentName = 'Anónimo';
 
 function sendSession(app, situation, correct, total, duration, mistakes) {
   if (!SCRIPT_URL || SCRIPT_URL === 'PEGA_AQUI_TU_URL') return;
@@ -1618,7 +1575,7 @@ function sendSession(app, situation, correct, total, duration, mistakes) {
   }).catch(() => {}); // silently fail if offline
 }
 
-askStudentName(() => {});
+{};
 </script>
 </body>
 </html>
